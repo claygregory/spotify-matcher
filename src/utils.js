@@ -7,7 +7,9 @@ const artist_separators = [' and ', ' with ', ' x ', ' + ', ' & ', ', '];
 const utils = {};
 
 utils.splitArtist = (value) => {
-  let parts = _.values(utils.splitFeaturing(value));
+  let parts = _.compact(
+    _.values(utils.splitFeaturing(value))
+  );
   _.each(artist_separators, sep => {
     parts = _.flatMap(parts, part => part.toLowerCase().split(sep));
   });
@@ -57,11 +59,21 @@ utils.toQuery = (field, value) => {
 };
 
 utils.splitFeaturing = (value) => {
-  let parts = value.match(/(.*) [(\[]feat(uring)?\.? (.*?)[)\]]/i);
-  if (!parts)
-    parts = value.match(/(.*?) feat(uring)?\.? (.*)/i);
+  let parts = value.match(/(.*) [(\[](ft|feat|featuring)\.? (.*?)[)\]](.*)/i); //if in parens, don't be greedy
+  let featuring, remainder;
+  if (parts) {
+    featuring = parts[3];
+    remainder = parts[4];
+  } else {
+    parts = value.match(/(.*?) (ft|feat|featuring)\.? (.*)/i); //else greedily consume rest of track, but attempt to recreate remainder
+    if (parts) {
+      const featuring_remainder = (parts[3] || '').match(/(.*?)( [-—(\[].*)/i);
+      featuring = featuring_remainder ? featuring_remainder[1] : parts[3];
+      remainder = featuring_remainder ? featuring_remainder[2] : null;
+    }
+  }
 
-  if (parts) return { root: parts[1], featuring: parts[3] };
+  if (parts) return { root: parts[1], featuring: featuring, remainder: remainder };
   else return { root: value };
 };
 

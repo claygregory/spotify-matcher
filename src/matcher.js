@@ -44,36 +44,46 @@ module.exports = class Matcher {
   }
 
   _enumerateVariations(field, input) {
-    const variations = _.uniq(this[`_enumerate${_.capitalize(field)}Variations`].call(this, input));
-    return variations;
+    const variations = this[`_enumerate${_.capitalize(field)}Variations`].call(this, input)
+      .map(v => v.toLowerCase());
+
+    return _.uniq(variations);
   }
 
   _enumerateArtistVariations(input) {
-    const variations = [input.toLowerCase()];
-    variations.push(utils.splitFeaturing(input).root.toLowerCase());
+    const variations = [input];
+    const featuring = utils.splitFeaturing(input);
+    variations.push(featuring.root);
     _.each(utils.splitArtist(input), a => variations.push(a));
 
     return variations;
   }
 
   _enumerateAlbumVariations(input) {
-    const variations = [input.toLowerCase()];
-    variations.push(utils.splitFeaturing(input).root.toLowerCase());
+    const variations = [input];
+
+    const featuring = utils.splitFeaturing(input);
+    variations.push(featuring.root);
+    variations.push(featuring.root + (featuring.remainder || ''));
+
     _.each(input.split(':'), part => {
       if (part.length > 4 || part.length > 0.33 * input.length)
         variations.push(part);
     });
 
-    const dropSqureBrackets = input.toLowerCase().replace(/\[.*?\]/, '');
-    if (dropSqureBrackets.length > input.length * 0.3)
-      variations.push(dropSqureBrackets);
+    const dropSquareBrackets = input.replace(/\[.*?\]/, '');
+    if (dropSquareBrackets.length > input.length * 0.3)
+      variations.push(dropSquareBrackets);
 
     return variations;
   }
 
   _enumerateTrackVariations(input) {
-    const variations = [input.toLowerCase()];
-    variations.push(utils.splitFeaturing(input).root.toLowerCase());
+    const variations = [input];
+
+    const featuring = utils.splitFeaturing(input);
+    variations.push(featuring.root);
+    variations.push(featuring.root + (featuring.remainder || ''));
 
     return variations;
   }
