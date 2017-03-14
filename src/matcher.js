@@ -4,6 +4,7 @@ const Client = require('./client');
 
 const jaroWinkler = require('talisman/metrics/distance/jaro-winkler');
 const penalties = require('./penalties').all;
+const unidecode = require('unidecode');
 const utils = require('./utils');
 const _ = require('lodash');
 
@@ -19,6 +20,7 @@ const default_options = {
     artist: 1,
     track: 1
   },
+  ignored_terms: ['remastered'],
   market: 'US'
 };
 
@@ -52,6 +54,10 @@ module.exports = class Matcher {
 
   _enumerateArtistVariations(input) {
     const variations = [input];
+
+    variations.push(utils.numberify(input));
+    variations.push(utils.numberTextify(input));
+
     const featuring = utils.splitFeaturing(input);
     variations.push(featuring.root);
     _.each(utils.splitArtist(input), a => variations.push(a));
@@ -61,6 +67,9 @@ module.exports = class Matcher {
 
   _enumerateAlbumVariations(input) {
     const variations = [input];
+
+    variations.push(utils.numberify(input));
+    variations.push(utils.numberTextify(input));
 
     const featuring = utils.splitFeaturing(input);
     variations.push(featuring.root);
@@ -80,6 +89,9 @@ module.exports = class Matcher {
 
   _enumerateTrackVariations(input) {
     const variations = [input];
+
+    variations.push(utils.numberify(input));
+    variations.push(utils.numberTextify(input));
 
     const featuring = utils.splitFeaturing(input);
     variations.push(featuring.root);
@@ -195,7 +207,15 @@ module.exports = class Matcher {
 
     const scores = _.flatMap(inputs, s => {
       return _.map(matches, m => {
-        let sim = jaroWinkler(s.toLowerCase(), m.name.toLowerCase());
+
+        const preproc = t => {
+          let p = unidecode(t.toLowerCase());
+          p = p.replace(/[ .…,\-—()\[\]]/g, '');
+          _.each(this.options.ignored_terms, it => p = p.replace(it, ''));
+          return p;
+        };
+
+        let sim = jaroWinkler(preproc(s), preproc(m.name));
 
         const penality = penalties.reduce((sum, penality) => {
           return sum + penality(s, m);
