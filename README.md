@@ -87,7 +87,7 @@ The options object supports the following configuration(s), defaults as below:
 
 ## Performance Testing
 
-An [always expanding] test file of sample inputs and expected resposnes is provided in `test-performance/tests.tsv` Running `npm run perf` will process this file and provide performance results. Additions to this file welcome (US market IDs, please)!
+An [always expanding] test file of sample inputs and expected responses is provided in `test-performance/tests.tsv` Running `npm run perf` will process this file and provide performance results. Additions to this file welcome (US market IDs, please)!
 
 ## License
 
