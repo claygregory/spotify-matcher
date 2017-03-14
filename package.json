@@ -1,0 +1,27 @@
+{
+  "name": "@claygregory/spotify-matcher",
+  "version": "0.0.1",
+  "description": "Matches tracks to their associated Spotify ID",
+  "author": "Clay Gregory <clay@claygregory.com> (https://claygregory.com/)",
+  "repository": "claygregory/spotify-matcher",
+  "homepage": "https://github.com/claygregory/spotify-matcher",
+  "license": "MIT",
+  "main": "src/matcher.js",
+  "scripts": {
+    "perf": "node ./test-performance"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "bluebird-retry": "^0.10.1",
+    "bottleneck": "^1.15.1",
+    "lodash": "^4.17.4",
+    "request": "^2.81.0",
+    "request-promise": "^4.1.1",
+    "talisman": "^0.18.0"
+  },
+  "devDependencies": {
+    "cli-table2": "^0.2.0",
+    "eslint": "3.*.*",
+    "mocha": "^3.2.0"
+  }
+}
