@@ -5,7 +5,7 @@ This is a JavaScript module for matching artist/album/track information (such as
 
 As the input is expected to be from a variety of sources, each with differing tagging practices, matching is a bit more than just hitting the Spotify search endpoint and taking the top hit. The Spotify search endpoint is pretty sensitive to extraneous information, so this module attempts to trim excess information from fields pre-query, and score/filter returned search results client-side for best-match. In addition, we can't expect every track to be within the Spotify catalog, so scoring thresholds determine when it's to acceptable fail, ignoring the top match.
 
-## Instalation
+## Installation
 
 ```bash
 npm install --save @claygregory/spotify-matcher
@@ -26,7 +26,7 @@ spotify.matchTrack({
 });
 ```
 
-The match object above will contain artist, album, and track information, based on internal scoring. One or more of the fields may not be provided, if a suitable match was not found. A complete match object takes the form:
+The match object will contain artist, album, and track information, based on internal scoring. One or more of the fields may not be provided, if a suitable match was not found. A complete match object takes the form:
 
 ```json
 {
@@ -56,13 +56,13 @@ Scores are based on the Jaro-Winkler distance between the Spotify field name, an
 
 ## Access Token and Options
 
-The module operates with relatively sane defaults, and does not require a Spotify access token for small match jobs. However, a Spotify OAuth 2 token can be provided, for a higher rate limit from Spotify.
+The module operates with relatively sane defaults, and does not require a Spotify access token for small match jobs. However, a Spotify OAuth2 token may be provided, for a higher rate limit from Spotify.
 
 ```javascript
 const spotify = new SpotifyMatcher(access_token, options);
 ```
 
-The `access_token` can be a string, or a function to provide the token per-request (for example, to handle refreshing). This library does not provide any OAuth access flow handling, that's on you.
+The `access_token` is either a string, or a function to provide the token per-request (for example, to handle refreshing as needed on long-running match jobs). This library does not provide any OAuth access flow handling, that's on you.
 
 The options object supports the following configuration(s), defaults as below:
 
