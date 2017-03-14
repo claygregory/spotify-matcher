@@ -1,7 +1,7 @@
 
 # Spotify Matcher
 
-This is a JavaScript module for matching artist/album/track information (such as from your music library) to Spotify IDs. Tossed together on short order, it's not pretty and robestness is questionable. As such, the audience is primarily myself, currently in a  personal data pipeline enriching last.fm scrobbles from a variety of sources (Pandora, iTunes, and Spotify).
+This is a JavaScript module for matching artist/album/track information (such as from your music library) to Spotify IDs. Tossed together on short order, it's not pretty and robustness is questionable. As such, the audience is primarily myself, currently in a  personal data pipeline enriching last.fm scrobbles from a variety of sources (Pandora, iTunes, and Spotify).
 
 As the input is expected to be from a variety of sources, each with differing tagging practices, matching is a bit more than just hitting the Spotify search endpoint and taking the top hit. The Spotify search endpoint is pretty sensitive to extraneous information, so this module attempts to trim excess information from fields pre-query, and score/filter returned search results client-side for best-match. In addition, we can't expect every track to be within the Spotify catalog, scoring thresholds determing when it's to acceptable fail, and ignore the top match.
 
