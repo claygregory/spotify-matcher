@@ -19,7 +19,10 @@ penalities.penalizeTributes = (input, compare) => {
  *  Penalize remixes unless otherwise defined in source
  */
 penalities.penalizeRemixMismatch = (input, compare) => {
-  const remixMismatch = (compare.name.toLowerCase().indexOf('remix') > -1 && input.toLowerCase().indexOf('remix') === -1);
+  const remixTerms = ['remix', 'rmx'];
+  const hasRemix = (term) => _.reduce(remixTerms, (acc, t) => acc || term.toLowerCase().indexOf(t) > -1, false);
+
+  const remixMismatch = hasRemix(compare.name) && !hasRemix(input);
   return remixMismatch ? 0.2 : 0;
 };
 
@@ -42,10 +45,16 @@ penalities.penalizeLength = (input, compare) => {
  *  Ensure more popular matches are preferred over short matches, all else equal
  */
 penalities.penalizeOnPopularity = (input, compare) => {
-  return ((100 - compare.popularity) || 0) / 10000;
+  const L = 0.05;
+  const k = 0.1;
+  const x0 = 50;
+  const f = (x) => L / (1 + Math.pow(Math.E, k * (x - x0)));
+
+  return f(compare.popularity || 50);
 };
 
 module.exports = {
   named: penalities,
   all: _.values(penalities)
 };
+
