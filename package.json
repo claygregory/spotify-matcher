@@ -1,6 +1,6 @@
 {
   "name": "@claygregory/spotify-matcher",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Matches tracks to their associated Spotify ID",
   "author": "Clay Gregory <clay@claygregory.com> (https://claygregory.com/)",
   "repository": "claygregory/spotify-matcher",
