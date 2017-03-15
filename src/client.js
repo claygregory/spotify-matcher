@@ -25,7 +25,7 @@ module.exports = class Client {
     this.throttle = new Bottleneck(1, this.options.rate_limit_ms);
 
     if (this.options.cache_requests)
-      this._doRequest = _.memoize(this._doRequest, (...params) => params.join(':')).bind(this);
+      this._doRequest = _.memoize(this._doRequest, (method, url) => [method, url].join(':')).bind(this);
   }
 
   getAlbum(id) {
@@ -47,7 +47,7 @@ module.exports = class Client {
     const url = `${api_base}/audio-features/${id}`;
     return this._doRequest('GET', url)
       .catch(err => {
-        if (err.message.includes('404'))
+        if (err.message.indexOf('404') > -1)
           return null;
         else
           throw err;
