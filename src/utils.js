@@ -1,5 +1,6 @@
 'use strict';
 
+const unidecode = require('unidecode');
 const _ = require('lodash');
 
 const artist_separators = [' and ', ' with ', ' x ', ' + ', ' & ', ', '];
@@ -58,7 +59,7 @@ utils.splitArtist = (value) => {
 };
 
 utils.toAlbumQuery = (value) => {
-  value = value.toLowerCase();
+  value = unidecode(value.toLowerCase());
   value = utils.splitFeaturing(value).root;
 
   const withoutParens = utils.withoutParens(value);
@@ -68,7 +69,7 @@ utils.toAlbumQuery = (value) => {
 };
 
 utils.toArtistQuery = (value) => {
-  value = value.toLowerCase();
+  value = unidecode(value.toLowerCase());
   value = utils.splitFeaturing(value).root;
 
   const firstSegment = _.chain(artist_separators)
@@ -85,7 +86,7 @@ utils.toArtistQuery = (value) => {
 };
 
 utils.toTrackQuery = (value) => {
-  value = value.toLowerCase();
+  value = unidecode(value.toLowerCase());
   value = utils.splitFeaturing(value).root;
 
   const withoutParens = utils.withoutParens(value);
