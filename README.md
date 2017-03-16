@@ -1,9 +1,9 @@
 
 # Spotify Matcher
 
-This is a JavaScript module for matching artist/album/track information (such as from your music library) to Spotify IDs. Tossed together on short order, it's not pretty and robustness is questionable. As such, *the audience is primarily myself*, currently in a  personal data pipeline enriching last.fm scrobbles from a variety of sources (Pandora, iTunes, and Spotify).
+This is a JavaScript module for matching artist/album/track information (such as from your music library) to Spotify IDs. Tossed together on short order, it's not pretty and robustness is questionable. As such, *the audience is primarily myself*, currently in a  personal data pipeline enriching [last.fm](https://www.last.fm/) scrobbles from a variety of sources (Pandora, iTunes, and Spotify).
 
-As the input is expected to be from a variety of sources, each with differing tagging practices, matching is a bit more than just hitting the Spotify search endpoint and taking the top hit. The Spotify search endpoint is pretty sensitive to extraneous information, so this module attempts to trim excess information from fields pre-query, and score/filter returned search results client-side for best-match. In addition, we can't expect every track to be within the Spotify catalog, so scoring thresholds determine when it's acceptable to fail, ignoring the top match.
+As the input is expected to be from a variety of sources, each with differing tagging practices, matching is a bit beyond hitting the Spotify search endpoint and taking the top hit. The search endpoint is pretty sensitive to extraneous terms, so this module attempts to trim excess tokens from fields pre-query, casting a wide net and scoring/filtering search results client-side for best-match. In addition, we can't expect every track to be within the Spotify catalog, so scoring thresholds determine when it's acceptable to fail, rejecting the existence of a match.
 
 ## Installation
 
@@ -52,7 +52,7 @@ The match object will contain artist, album, and track information, based on int
 }
 ```
 
-Scores are based on the Jaro-Winkler distance between the Spotify field name, and a processed version of provided field information.
+Scores are based on the Jaro-Winkler similarity between the Spotify field name, and a processed version of provided field information that attempts to address common tagging mismatch concerns.
 
 ## Access Token and Options
 
@@ -87,7 +87,7 @@ The options object supports the following configuration(s), defaults as below:
 
 ## Performance Testing
 
-An [always expanding] test file of sample inputs and expected responses is provided in `test-performance/tests.tsv` Running `npm run perf` will process this file and provide performance results. Additions to this file welcome (US market IDs, please)!
+A test file of sample inputs and expected responses is provided in `test-performance/tests.tsv`, especially with regard to potential fail cases. Running `npm run perf` will process this file and provide performance results. Additions to this file welcome (US market IDs, please)!
 
 ## License
 
