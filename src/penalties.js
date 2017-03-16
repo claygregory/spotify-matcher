@@ -19,7 +19,7 @@ penalities.penalizeTributes = (input, compare) => {
  *  Penalize remixes unless otherwise defined in source
  */
 penalities.penalizeRemixMismatch = (input, compare) => {
-  const remixTerms = ['remix', 'rmx'];
+  const remixTerms = ['remix', 'rmx', 'edit'];
   const hasRemix = (term) => _.reduce(remixTerms, (acc, t) => acc || term.toLowerCase().indexOf(t) > -1, false);
 
   const remixMismatch = hasRemix(compare.name) && !hasRemix(input);

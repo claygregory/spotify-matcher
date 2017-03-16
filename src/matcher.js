@@ -20,7 +20,7 @@ const default_options = {
     artist: 1,
     track: 1
   },
-  ignored_terms: ['remastered'],
+  ignored_terms: ['remastered', 'deluxe edition'],
   market: 'US'
 };
 
@@ -210,8 +210,8 @@ module.exports = class Matcher {
 
         const preproc = t => {
           let p = unidecode(t.toLowerCase());
-          p = p.replace(/[ .…,\-—()\[\]]/g, '');
           _.each(this.options.ignored_terms, it => p = p.replace(it, ''));
+          p = p.replace(/[ .…,\-—()\[\]]/g, '');
           return p;
         };
 
