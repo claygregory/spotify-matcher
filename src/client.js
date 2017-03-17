@@ -1,6 +1,6 @@
 'use strict';
 
-const Bottleneck = require('Bottleneck');
+const Bottleneck = require('bottleneck');
 
 const request = require('request-promise');
 const retry = require('bluebird-retry');
