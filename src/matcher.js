@@ -34,15 +34,14 @@ module.exports = class Matcher {
   matchTrack(input) {
 
     return this._matchByTrack(input)
-      .then(matches => {
-        if (matches.length || !input.album) return matches;
+      .then(match => {
+        if (match || !input.album) return match;
         else return this._matchByAlbum(input);
       })
-      .then(matches => {
-        if (matches.length) return matches;
+      .then(match => {
+        if (match) return match;
         else return this._matchByArtist(input);
-      })
-      .then(matches => _.first(matches));
+      });
   }
 
   _enumerateVariations(field, input) {
@@ -110,7 +109,8 @@ module.exports = class Matcher {
         return { artist: [this._transformArtistResponse(artist)] };
       }))
       .then(matches => this._scoreMatches(input, matches, ['artist']))
-      .then(this._filterMatches.bind(this));
+      .then(this._filterMatches.bind(this))
+      .then(_.first);
   }
 
   _matchByAlbum(input) {
@@ -133,7 +133,8 @@ module.exports = class Matcher {
 
       })
       .then(matches => this._scoreMatches(input, matches, ['artist', 'album']))
-      .then(this._filterMatches.bind(this));
+      .then(this._filterMatches.bind(this))
+      .then(_.first);
   }
 
   _matchByTrack(input) {
@@ -158,7 +159,8 @@ module.exports = class Matcher {
 
       })
       .then(matches => this._scoreMatches(input, matches, ['artist', 'album', 'track']))
-      .then(_.bind(this._filterMatches, this, _, ['album', 'track'], 'track'));
+      .then(_.bind(this._filterMatches, this, _, ['album', 'track'], 'track'))
+      .then(_.first);
   }
 
   _filterMatches(matches, thresholdFields, requiredField) {

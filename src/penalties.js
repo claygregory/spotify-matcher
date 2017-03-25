@@ -23,7 +23,7 @@ penalities.penalizeRemixMismatch = (input, compare) => {
   const hasRemix = (term) => _.reduce(remixTerms, (acc, t) => acc || term.toLowerCase().indexOf(t) > -1, false);
 
   const remixMismatch = hasRemix(compare.name) && !hasRemix(input);
-  return remixMismatch ? 0.2 : 0;
+  return remixMismatch ? 0.1 : 0;
 };
 
 /**

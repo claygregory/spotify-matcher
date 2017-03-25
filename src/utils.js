@@ -90,7 +90,7 @@ utils.toTrackQuery = (value) => {
   value = utils.splitFeaturing(value).root;
 
   const withoutParens = utils.withoutParens(value);
-  if (withoutParens.length >= 4) value = withoutParens;
+  if (withoutParens.length >= 1) value = withoutParens;
 
   return _cleanQueryCharacters(value);
 };
