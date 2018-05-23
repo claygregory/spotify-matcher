@@ -9,17 +9,17 @@ const penalities = {};
  */
 penalities.penalizeTributes = (input, compare) => {
   let isTribute = false;
-  _.each(['tribute', 'karaoke', 'made famous'], modifier => {
+  _.each(['tribute', 'karaoke', 'made famous', 'originally performed by'], modifier => {
     isTribute = isTribute || (compare.name.toLowerCase().indexOf(modifier) > -1 && input.toLowerCase().indexOf(modifier) === -1);
   });
   return isTribute ? 0.3 : 0;
 };
 
 /**
- *  Penalize remixes unless otherwise defined in source
+ *  Penalize remixes/instrumentals/acoustics unless otherwise defined in source
  */
 penalities.penalizeRemixMismatch = (input, compare) => {
-  const remixTerms = ['remix', 'rmx', 'edit'];
+  const remixTerms = ['remix', 'rmx', 'acoustic', 'instrumental', 'edit'];
   const hasRemix = (term) => _.reduce(remixTerms, (acc, t) => acc || term.toLowerCase().indexOf(t) > -1, false);
 
   const remixMismatch = hasRemix(compare.name) && !hasRemix(input);
