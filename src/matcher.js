@@ -44,11 +44,21 @@ module.exports = class Matcher {
       });
   }
 
-  _enumerateVariations(field, input) {
-    const variations = this[`_enumerate${_.capitalize(field)}Variations`].call(this, input)
+  _enumerateVariations(field, input, inputField) {
+
+    let inputValue = input;
+    if (inputField)
+      inputValue = input[inputField];
+
+    const variations = this[`_enumerate${_.capitalize(field)}Variations`].call(this, inputValue)
       .map(v => v.toLowerCase());
 
-    return _.uniq(variations);
+    if (!inputField)
+      return _.uniq(variations);
+    else
+      return _.uniq(variations).map(v => {
+        return _.assign({}, input, { [inputField]: v });
+      });
   }
 
   _enumerateArtistVariations(input) {
@@ -193,8 +203,16 @@ module.exports = class Matcher {
     _.forEach(matches, match => {
       match.score = {};
       _.forEach(fields, field => {
-        if (input[field])
-          match.score[field] = this._scoreBestCombination(this._enumerateVariations(field, input[field]), match[field]);
+
+        if (input[field]) {
+
+          let scoringMatches = match[field];
+          if (field !== 'artist')
+            scoringMatches = this._enumerateVariations(field, scoringMatches, 'name');
+
+          match.score[field] = this._scoreBestCombination(this._enumerateVariations(field, input[field]), scoringMatches);
+        }
+
       });
 
       match.score.composite = this._scoreComposite(match);
@@ -207,8 +225,8 @@ module.exports = class Matcher {
     inputs = _.flatten([inputs]);
     matches = _.flatten([matches]);
 
-    const scores = _.flatMap(inputs, s => {
-      return _.map(matches, m => {
+    const scores = _.flatMap(inputs, (s, iIndex) => {
+      return _.map(matches, (m, mIndex) => {
 
         const preproc = t => {
           let p = unidecode(t.toLowerCase());
@@ -223,7 +241,7 @@ module.exports = class Matcher {
           return sum + penality(s, m);
         }, 0);
 
-        return Math.max(0, sim - penality);
+        return Math.max(0, sim - penality - ((iIndex + mIndex) * 0.0001));
       });
     });
 
