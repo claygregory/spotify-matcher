@@ -32,7 +32,7 @@ const utils = {};
 utils.numberify = (value) => {
   value = value.toLowerCase();
   _.each(number_strings, (str, i) => {
-    value = (` ${value} `).replace(` ${str} `, numbers[i]).trim();
+    value = (` ${value} `).replace(` ${str} `, ` ${numbers[i]} `).trim();
   });
 
   return value;
@@ -41,7 +41,7 @@ utils.numberify = (value) => {
 utils.numberTextify = (value) => {
   value = value.toLowerCase();
   _.each(numbers, (str, i) => {
-    value = (` ${value} `).replace(` ${str} `, number_strings[i]).trim();
+    value = (` ${value} `).replace(` ${str} `, ` ${number_strings[i]} `).trim();
   });
 
   return value;
